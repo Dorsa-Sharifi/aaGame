@@ -12,4 +12,5 @@ public class Settings {
     public static int chosenMap = 1;
 
 
+
 }
