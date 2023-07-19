@@ -27,8 +27,16 @@ public class RotateAnimation extends Transition {
         for (Node circlesAndLine : centralCircle.getCirclesAndLines()) {
             circlesAndLine.getTransforms().add(rotate);
         }
+        if (GameMenu.tab) {
+            setTimerForFreezeOption(rotate);
+        }
         if (GameMenu.gameOver){
             this.stop();
         }
+    }
+
+    private void setTimerForFreezeOption(Rotate rotate){
+
+
     }
 }

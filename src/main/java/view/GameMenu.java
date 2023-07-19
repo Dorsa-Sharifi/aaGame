@@ -1,9 +1,12 @@
 package view;
 
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -18,6 +21,8 @@ import model.CentralCircle;
 import model.Settings;
 
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameMenu extends Application {
     //TODO: ADD THE BASIC ELEMENTS TO THE ARRAYLIST OF CENTRAL CIRCLE
@@ -25,6 +30,13 @@ public class GameMenu extends Application {
     public Pane pane;
     public Scene scene;
     public static boolean gameOver = false;
+    public static boolean tab = false;
+    public Timeline timeline;
+
+    public Timer timer;
+    private int seconds = 0;
+    private int minute = 0;
+    private Label timeLabel;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -60,6 +72,7 @@ public class GameMenu extends Application {
     }
 
     private void addBasicElements(CentralCircle centralCircle, CentralCircle invisibleCircle) {
+        setTimer(pane);
         switch (Settings.chosenMap) {
             case 1:
                 Circle circleOne = new Circle();
@@ -116,6 +129,8 @@ public class GameMenu extends Application {
                             ThrowingAnimation throwingAnimation = new ThrowingAnimation
                                     (centralCircle, invisibleCircle, circleGroup, pane);
                             throwingAnimation.play();
+                        } else if (keyEvent.getCode() == KeyCode.TAB) {
+                            tab = true;
                         }
                     }
                 });
@@ -186,6 +201,32 @@ public class GameMenu extends Application {
         circleGroup.getChildren().add(number);
         pane.getChildren().add(circleGroup);
         return circleGroup;
+    }
+
+
+    private void setTimer(Pane pane) {
+        timer = new Timer();
+        timeLabel = new Label();
+        timeLabel.setLayoutX(450);
+        timeLabel.setStyle("-fx-background-color: #35a9c1;-fx-font-size: 20px; -fx-text-alignment: center;");
+        timeLabel.setPrefSize(60,30);
+        pane.getChildren().add(timeLabel);
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                seconds++;
+                if (seconds >= 60) {
+                    minute++;
+                    seconds = 0;
+                }
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        timeLabel.setText(minute+":"+seconds);
+                    }
+                });
+            }
+        }, 0, 1000);
     }
 
 }
