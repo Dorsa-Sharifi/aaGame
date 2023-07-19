@@ -15,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import model.CentralCircle;
 import model.Settings;
@@ -25,7 +24,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class GameMenu extends Application {
-    //TODO: ADD THE BASIC ELEMENTS TO THE ARRAYLIST OF CENTRAL CIRCLE
+
     public Stage stage;
     public Pane pane;
     public Scene scene;

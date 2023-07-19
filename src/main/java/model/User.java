@@ -2,12 +2,14 @@ package model;
 
 import javafx.scene.image.ImageView;
 
-import java.awt.*;
+import java.util.ArrayList;
+
 
 public class User {
     private String username;
     private String password;
     private ImageView profile;
+    public ArrayList<Integer> scores = new ArrayList<>();
 
     public User(String username, String password, ImageView profile) {
         this.username = username;
@@ -37,5 +39,13 @@ public class User {
 
     public void setProfile(ImageView profile) {
         this.profile = profile;
+    }
+
+    public ArrayList<Integer> getScores() {
+        return scores;
+    }
+
+    public void addToScores(int newScore) {
+        scores.add(newScore);
     }
 }
