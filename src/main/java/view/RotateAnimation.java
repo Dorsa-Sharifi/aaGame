@@ -27,5 +27,8 @@ public class RotateAnimation extends Transition {
         for (Node circlesAndLine : centralCircle.getCirclesAndLines()) {
             circlesAndLine.getTransforms().add(rotate);
         }
+        if (GameMenu.gameOver){
+            this.stop();
+        }
     }
 }

@@ -1,12 +1,17 @@
 package view;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import model.CentralCircle;
@@ -18,6 +23,8 @@ public class GameMenu extends Application {
     //TODO: ADD THE BASIC ELEMENTS TO THE ARRAYLIST OF CENTRAL CIRCLE
     public Stage stage;
     public Pane pane;
+    public Scene scene;
+    public static boolean gameOver = false;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -26,8 +33,9 @@ public class GameMenu extends Application {
         this.pane = pane;
         pane.setPrefSize(500, 600);
         pane.setStyle("-fx-background-color: #acbcff");
-        designTheMainMap();
         Scene scene = new Scene(pane);
+        this.scene = scene;
+        designTheMainMap();
         stage.setTitle("aaGame");
         stage.getIcons().add(new Image(Objects.requireNonNull(RegisterMenu.class.getResource
                 ("/images/aaIcon.png")).toExternalForm()));
@@ -93,13 +101,24 @@ public class GameMenu extends Application {
                         circleThree, lineThree,
                         circleFour, lineFour,
                         circleFive, lineFive);
-                addAllBasicElementsToCentralCircle(centralCircle , circleOne, lineOne,
+                addAllBasicElementsToCentralCircle(centralCircle, circleOne, lineOne,
                         circleTwo, lineTwo,
                         circleThree, lineThree,
                         circleFour, lineFour,
                         circleFive, lineFive);
-                RotateAnimation rotateAnimation = new RotateAnimation(centralCircle , invisibleCircle) ;
+                RotateAnimation rotateAnimation = new RotateAnimation(centralCircle, invisibleCircle);
                 rotateAnimation.play();
+                scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                    @Override
+                    public void handle(KeyEvent keyEvent) {
+                        if (keyEvent.getCode() == KeyCode.SPACE) {
+                            Group circleGroup = makeTheNewBall();
+                            ThrowingAnimation throwingAnimation = new ThrowingAnimation
+                                    (centralCircle, invisibleCircle, circleGroup, pane);
+                            throwingAnimation.play();
+                        }
+                    }
+                });
                 break;
             case 2:
                 break;
@@ -153,6 +172,20 @@ public class GameMenu extends Application {
         centralCircle.addNodes(lineFour);
         centralCircle.addNodes(circleFive);
         centralCircle.addNodes(lineFive);
+    }
+
+    private Group makeTheNewBall(){
+        Group circleGroup = new Group();
+        Circle circle = new Circle();
+        circle.setRadius(20);
+        Text number = new Text(String.valueOf(Settings.ballNumbers));
+        number.setFill(Color.WHITE);
+        circleGroup.setLayoutX(250);
+        circleGroup.setLayoutY(550);
+        circleGroup.getChildren().add(circle);
+        circleGroup.getChildren().add(number);
+        pane.getChildren().add(circleGroup);
+        return circleGroup;
     }
 
 }
