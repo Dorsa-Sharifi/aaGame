@@ -11,6 +11,7 @@ public class Settings {
     public static String throwBallShortcut = "Enter";
     public static String freezeShortcut = "Tab";
     public static int chosenMap = 1;
+    public static double increasingValue = (double) 1 / Settings.ballNumbers;
 
 
 

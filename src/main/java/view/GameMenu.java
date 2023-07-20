@@ -21,6 +21,7 @@ import model.CentralCircle;
 import model.Settings;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,12 +31,16 @@ public class GameMenu extends Application {
     public Pane pane;
     public Scene scene;
     public static boolean gameOver = false;
+    public static boolean victory = false;
     public static boolean tab = false;
     public static ProgressBar progressBar;
+    public static ProgressBar freezeBar;
     public static Text scoreText;
+    public static Text freezeText;
+    public static Text gonnaGainScore;
     public static Text leftBalls;
     public static int score = 0;
-    public Timer timer;
+    public static Timer timer;
     private int seconds = 0;
     private int minute = 0;
     private Label timeLabel;
@@ -132,12 +137,16 @@ public class GameMenu extends Application {
                                     (centralCircle, invisibleCircle, circleGroup, pane);
                             throwingAnimation.play();
                         } else if (keyEvent.getCode() == KeyCode.TAB) {
-                            tab = true;
+                            if (freezeBar.getProgress() == 1) {
+                                tab = true;
+                            }
                         }
                     }
                 });
-                createProgressBar();
-                createLeftBallLabel();
+                createProgressBarOfScores();
+                createProgressBarOfFreezeOption();
+                createLeftBallText();
+                createGonnaGainScoreText();
                 break;
             case 2:
                 break;
@@ -231,9 +240,10 @@ public class GameMenu extends Application {
                 });
             }
         }, 0, 1000);
+
     }
 
-    private void createProgressBar(){
+    private void createProgressBarOfScores(){
         scoreText = new Text();
         scoreText.setText("Score: "+ score);
         scoreText.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 15px ;");
@@ -247,13 +257,35 @@ public class GameMenu extends Application {
         pane.getChildren().add(progressBar);
     }
 
+    private void createProgressBarOfFreezeOption() {
+        freezeText = new Text();
+        freezeText.setText("Freeze Option");
+        freezeText.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 15px ;");
+        freezeText.setLayoutX(5);
+        freezeText.setLayoutY(50);
+        freezeBar = new ProgressBar();
+        freezeBar.setProgress(0);
+        freezeBar.setLayoutX(110);
+        freezeBar.setLayoutY(35);
+        pane.getChildren().add(freezeText);
+        pane.getChildren().add(freezeBar);
+    }
 
-    private void createLeftBallLabel() {
+    private void createLeftBallText() {
         leftBalls = new Text() ;
         leftBalls.setText("Left Balls: "+ Settings.ballNumbers);
         leftBalls.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 15px ;");
         leftBalls.setLayoutX(5);
-        leftBalls.setLayoutY(50);
+        leftBalls.setLayoutY(75);
         pane.getChildren().add(leftBalls);
+    }
+
+    private void createGonnaGainScoreText(){
+        gonnaGainScore = new Text() ;
+        gonnaGainScore.setText("Throw Score: "+ Settings.increasingValue * 100);
+        gonnaGainScore.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 15px ;");
+        gonnaGainScore.setLayoutX(5);
+        gonnaGainScore.setLayoutY(95);
+        pane.getChildren().add(gonnaGainScore);
     }
 }
