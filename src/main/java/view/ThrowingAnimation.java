@@ -46,7 +46,8 @@ public class ThrowingAnimation extends Transition {
                 pane.getChildren().add(newLine);
                 centralCircle.getCirclesAndLines().add(newCircle);
                 centralCircle.getCirclesAndLines().add(newLine);
-                Settings.ballNumbers--;
+                Settings.leftBalls--;
+                GameMenu.leftBalls.setText("Left Balls: "+Settings.leftBalls);
                 this.stop();
             } else {
                 pane.setStyle("-fx-background-color: red");

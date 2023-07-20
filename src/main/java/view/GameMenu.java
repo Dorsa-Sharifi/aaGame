@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -30,8 +31,10 @@ public class GameMenu extends Application {
     public Scene scene;
     public static boolean gameOver = false;
     public static boolean tab = false;
-    public Timeline timeline;
-
+    public static ProgressBar progressBar;
+    public static Text scoreText;
+    public static Text leftBalls;
+    public static int score = 0;
     public Timer timer;
     private int seconds = 0;
     private int minute = 0;
@@ -133,6 +136,8 @@ public class GameMenu extends Application {
                         }
                     }
                 });
+                createProgressBar();
+                createLeftBallLabel();
                 break;
             case 2:
                 break;
@@ -192,7 +197,7 @@ public class GameMenu extends Application {
         Group circleGroup = new Group();
         Circle circle = new Circle();
         circle.setRadius(20);
-        Text number = new Text(String.valueOf(Settings.ballNumbers));
+        Text number = new Text(String.valueOf(Settings.leftBalls));
         number.setFill(Color.WHITE);
         circleGroup.setLayoutX(250);
         circleGroup.setLayoutY(550);
@@ -228,4 +233,27 @@ public class GameMenu extends Application {
         }, 0, 1000);
     }
 
+    private void createProgressBar(){
+        scoreText = new Text();
+        scoreText.setText("Score: "+ score);
+        scoreText.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 15px ;");
+        scoreText.setLayoutX(5);
+        scoreText.setLayoutY(25);
+        progressBar = new ProgressBar();
+        progressBar.setProgress(0);
+        progressBar.setLayoutX(70);
+        progressBar.setLayoutY(10);
+        pane.getChildren().add(scoreText);
+        pane.getChildren().add(progressBar);
+    }
+
+
+    private void createLeftBallLabel() {
+        leftBalls = new Text() ;
+        leftBalls.setText("Left Balls: "+ Settings.ballNumbers);
+        leftBalls.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 15px ;");
+        leftBalls.setLayoutX(5);
+        leftBalls.setLayoutY(50);
+        pane.getChildren().add(leftBalls);
+    }
 }
