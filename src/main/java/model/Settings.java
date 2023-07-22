@@ -6,7 +6,7 @@ public class Settings {
     public static Double levelDifficulty = 2.0;
     public static boolean isMute = false;
     public static boolean isColorBright = true;
-    public static int ballNumbers = 10;
+    public static int ballNumbers = 4;
     public static int leftBalls = ballNumbers;
     public static String throwBallShortcut = "Enter";
     public static String freezeShortcut = "Tab";

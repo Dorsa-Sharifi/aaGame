@@ -11,6 +11,7 @@ import model.CentralCircle;
 import model.Settings;
 
 import javax.print.attribute.standard.MediaSize;
+import javax.swing.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,11 +20,18 @@ public class RotateAnimation extends Transition {
     private CentralCircle invisibleCircle;
     private int freezeOptionIsFinished = 4;
     private int rotateCounter = 4;
+    private int visibleCounter = 1;
     private boolean changeToCounterClockWise = false;
     private boolean changeToClockWise = false;
     private boolean decreased = false;
     private boolean increased = true;
     public static boolean phase2 = false;
+    private boolean isVisible = true;
+
+    private Timer makeBallsLargerOrNormal;
+    private Timer visibilityOfBalls;
+    private Timer clockWise;
+    private Timer counterClockWise;
 
     public RotateAnimation(CentralCircle centralCircle, CentralCircle invisibleCircle) {
         this.centralCircle = centralCircle;
@@ -80,6 +88,7 @@ public class RotateAnimation extends Transition {
     private void checkPhases(Rotate rotate) {
         double phase = (double) Settings.leftBalls / Settings.ballNumbers;
         if (phase > 0.5 && phase <= 0.75) { //phase 2
+            phase2 = true;
             if (!changeToCounterClockWise && !changeToClockWise) { //set timer to changeToCounterClockwise
                 changeToCounterClockWise = true;
                 changeDirectionToCounterClockWise();
@@ -93,8 +102,8 @@ public class RotateAnimation extends Transition {
             }
             changeTheRadiusOfBalls();
         } else if (phase > 0.25 && phase <= 0.5) { //phase 3
-            System.out.println("phase3");
-
+            phase2 = false;
+            changeTheVisibilityOfBalls();
         } else if (phase > 0 && phase <= 0.25) { //phase 4
             System.out.println("phase4");
         }
@@ -102,6 +111,7 @@ public class RotateAnimation extends Transition {
 
     private void changeDirectionToCounterClockWise() {
         Timer timer = new Timer();
+        this.counterClockWise = timer;
         timer.schedule(new TimerTask() {
             public void run() {
                 if (rotateCounter != 1) {
@@ -124,6 +134,7 @@ public class RotateAnimation extends Transition {
 
     private void changeDirectionToClockWise() {
         Timer timer = new Timer();
+        this.clockWise = timer;
         timer.schedule(new TimerTask() {
             public void run() {
                 if (rotateCounter != 4) {
@@ -146,30 +157,32 @@ public class RotateAnimation extends Transition {
 
     private void changeTheRadiusOfBalls() {
         Timer timer = new Timer();
+        this.makeBallsLargerOrNormal = timer;
         timer.schedule(new TimerTask() {
             public void run() {
-                if (increased && !decreased) {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            changeTheRadius(true);
-                            increased = false;
-                            decreased = true;
-                        }
-                    });
-                }
-                else if (!increased && decreased) {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            changeTheRadius(false);
-                            increased = true;
-                            decreased = false;
-                        }
-                    });
-                }
-                if (GameMenu.gameOver) {
-                    timer.cancel();
+                if (phase2) {
+                    if (increased && !decreased) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                changeTheRadius(true);
+                                increased = false;
+                                decreased = true;
+                            }
+                        });
+                    } else if (!increased && decreased) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                changeTheRadius(false);
+                                increased = true;
+                                decreased = false;
+                            }
+                        });
+                    }
+                    if (GameMenu.gameOver) {
+                        timer.cancel();
+                    }
                 }
             }
         }, 0, 1000);
@@ -199,4 +212,38 @@ public class RotateAnimation extends Transition {
             }
         }
     }
+
+    private void changeTheVisibilityOfBalls() {
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (isVisible) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            setNewVisibilityToBalls(true);
+                            isVisible = false;
+                        }
+                    });
+                } else {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            setNewVisibilityToBalls(false);
+                            isVisible = true;
+                        }
+                    });
+                }
+            }
+        },0,1000);
+    }
+
+    private void setNewVisibilityToBalls(boolean status) {
+        for (Node circlesAndLine : centralCircle.circlesAndLines) {
+            if (status) circlesAndLine.setOpacity(0);
+            else circlesAndLine.setOpacity(1);
+        }
+    }
+
 }
