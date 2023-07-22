@@ -137,7 +137,6 @@ public class GameMenu extends Application {
 
                     @Override
                     public void handle(KeyEvent keyEvent) {
-                        if (RotateAnimation.phase4 && !pane.getChildren().contains(throwAngle)) createThrowAngleText();
                         if (keyEvent.getCode() == KeyCode.SPACE) {
                             ThrowingAnimation throwingAnimation = new ThrowingAnimation
                                     (centralCircle, invisibleCircle, circleGroup, pane);

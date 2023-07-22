@@ -108,11 +108,13 @@ public class RotateAnimation extends Transition {
         } else if (phase > 0.25 && phase <= 0.5) { //phase 3
             phase2 = false;
             phase3 = true;
+            changeTheRadius(false);
             changeTheVisibilityOfBalls();
         } else if (phase > 0 && phase <= 0.25) { //phase 4
             if (phase3) setNewVisibilityToBalls(false);
             phase3 = false;
             phase4 = true;
+            if (!GameMenu.pane.getChildren().contains(GameMenu.throwAngle)) GameMenu.createThrowAngleText();
             setTimerForAngularChange();
         }
     }
