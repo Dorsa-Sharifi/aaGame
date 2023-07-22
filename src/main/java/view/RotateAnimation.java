@@ -12,6 +12,7 @@ import model.Settings;
 
 import javax.print.attribute.standard.MediaSize;
 import javax.swing.*;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,7 +27,10 @@ public class RotateAnimation extends Transition {
     private boolean decreased = false;
     private boolean increased = true;
     public static boolean phase2 = false;
+    public static boolean phase3 = false;
+    public static boolean phase4 = false;
     private boolean isVisible = true;
+    private int newAngleCounter = 5;
 
     private Timer makeBallsLargerOrNormal;
     private Timer visibilityOfBalls;
@@ -103,9 +107,13 @@ public class RotateAnimation extends Transition {
             changeTheRadiusOfBalls();
         } else if (phase > 0.25 && phase <= 0.5) { //phase 3
             phase2 = false;
+            phase3 = true;
             changeTheVisibilityOfBalls();
         } else if (phase > 0 && phase <= 0.25) { //phase 4
-            System.out.println("phase4");
+            if (phase3) setNewVisibilityToBalls(false);
+            phase3 = false;
+            phase4 = true;
+            setTimerForAngularChange();
         }
     }
 
@@ -218,22 +226,24 @@ public class RotateAnimation extends Transition {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (isVisible) {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            setNewVisibilityToBalls(true);
-                            isVisible = false;
-                        }
-                    });
-                } else {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            setNewVisibilityToBalls(false);
-                            isVisible = true;
-                        }
-                    });
+                if (phase3) {
+                    if (isVisible) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                setNewVisibilityToBalls(true);
+                                isVisible = false;
+                            }
+                        });
+                    } else {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                setNewVisibilityToBalls(false);
+                                isVisible = true;
+                            }
+                        });
+                    }
                 }
             }
         },0,1000);
@@ -243,6 +253,45 @@ public class RotateAnimation extends Transition {
         for (Node circlesAndLine : centralCircle.circlesAndLines) {
             if (status) circlesAndLine.setOpacity(0);
             else circlesAndLine.setOpacity(1);
+        }
+    }
+
+    private void setTimerForAngularChange() {
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (phase4) {
+                    if (newAngleCounter != 0) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                newAngleCounter--;
+                            }
+                        });
+                    }
+                    if (newAngleCounter == 0){
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                makeTheTransitionAngular();
+                                newAngleCounter = 5;
+                            }
+                        });
+                    }
+                }
+            }
+        },0,1000);
+    }
+
+
+    private void makeTheTransitionAngular() {
+        if (Settings.levelDifficulty == 1.0) {
+            ThrowingAnimation.newAngle = Math.floor(Math.random() * (7 - (- 7 ) + 1) + -7);
+        } else if (Settings.levelDifficulty == 2.0) {
+            ThrowingAnimation.newAngle = Math.floor(Math.random() * (12 - (- 12 ) + 1) + -12);
+        } else if (Settings.levelDifficulty == 3.0) {
+            ThrowingAnimation.newAngle = Math.floor(Math.random() * (15 - (- 15 ) + 1) + -15);
         }
     }
 

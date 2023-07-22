@@ -28,7 +28,7 @@ import java.util.TimerTask;
 public class GameMenu extends Application {
 
     public Stage stage;
-    public Pane pane;
+    public static Pane pane;
     public Scene scene;
     public static boolean gameOver = false;
     public static boolean victory = false;
@@ -40,11 +40,14 @@ public class GameMenu extends Application {
     public static Text freezeText;
     public static Text gonnaGainScore;
     public static Text leftBalls;
+    public static Text throwAngle;
     public static int score = 0;
     public static Timer timer;
     private int seconds = 0;
     private int minute = 0;
     private Label timeLabel;
+    public static Group circleGroup;
+    public static double newAngle;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -129,11 +132,13 @@ public class GameMenu extends Application {
                         circleFive, lineFive);
                 RotateAnimation rotateAnimation = new RotateAnimation(centralCircle, invisibleCircle);
                 rotateAnimation.play();
+                circleGroup = makeTheNewBall();
                 scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
                     @Override
                     public void handle(KeyEvent keyEvent) {
+                        if (RotateAnimation.phase4 && !pane.getChildren().contains(throwAngle)) createThrowAngleText();
                         if (keyEvent.getCode() == KeyCode.SPACE) {
-                            Group circleGroup = makeTheNewBall();
                             ThrowingAnimation throwingAnimation = new ThrowingAnimation
                                     (centralCircle, invisibleCircle, circleGroup, pane);
                             throwingAnimation.play();
@@ -203,7 +208,7 @@ public class GameMenu extends Application {
         centralCircle.addNodes(lineFive);
     }
 
-    private Group makeTheNewBall(){
+    public static Group makeTheNewBall(){
         Group circleGroup = new Group();
         Circle circle = new Circle();
         circle.setRadius(20);
@@ -288,5 +293,21 @@ public class GameMenu extends Application {
         gonnaGainScore.setLayoutX(5);
         gonnaGainScore.setLayoutY(95);
         pane.getChildren().add(gonnaGainScore);
+    }
+
+    public static void createThrowAngleText() {
+        throwAngle = new Text() ;
+        if (Settings.levelDifficulty == 1.0) {
+            newAngle = 0;
+        } else if (Settings.levelDifficulty == 2.0) {
+            newAngle = 2;
+        } else if (Settings.levelDifficulty == 3.0) {
+            newAngle = 3;
+        }
+        throwAngle.setText("Throw Angle: " + newAngle);
+        throwAngle.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 15px ;");
+        throwAngle.setLayoutX(5);
+        throwAngle.setLayoutY(115);
+        pane.getChildren().add(throwAngle);
     }
 }

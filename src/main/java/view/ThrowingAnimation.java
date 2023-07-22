@@ -25,6 +25,7 @@ public class ThrowingAnimation extends Transition {
     private CentralCircle invisibleCircle;
     private Group circleGroup;
     private Pane pane;
+    public static double newAngle;
 
     public ThrowingAnimation(CentralCircle centralCircle, CentralCircle invisibleCircle, Group circleGroup , Pane pane) {
         this.centralCircle = centralCircle;
@@ -37,7 +38,8 @@ public class ThrowingAnimation extends Transition {
 
     @Override
     protected void interpolate(double v) {
-        circleGroup.setLayoutY(circleGroup.getLayoutY() - 5);
+         if (!RotateAnimation.phase4) circleGroup.setLayoutY(circleGroup.getLayoutY() - 5);
+         else makeAngularTransition();
         if (circleGroup.getBoundsInParent().intersects(invisibleCircle.getBoundsInParent())){
             checkCollision();
             if (RotateAnimation.phase2) RotateAnimation.checkCollision();
@@ -56,17 +58,17 @@ public class ThrowingAnimation extends Transition {
                 GameMenu.leftBalls.setText("Left Balls: "+Settings.leftBalls);
                 setTheNewValueOfProgressBar();
                 checkVictory();
-                this.stop();
-            } else {
-                pane.setStyle("-fx-background-color: red");
-                invisibleCircle.setFill(Color.RED);
-                GameMenu.timer.cancel();
+                GameMenu.circleGroup = GameMenu.makeTheNewBall();
                 this.stop();
             }
         }
+        if (GameMenu.gameOver){
+            pane.setStyle("-fx-background-color: red");
+            invisibleCircle.setFill(Color.RED);
+            GameMenu.timer.cancel();
+            this.stop();
+        }
     }
-
-
 
     private void checkCollision() {
         for (Node circlesAndLine : centralCircle.getCirclesAndLines()) {
@@ -97,6 +99,7 @@ public class ThrowingAnimation extends Transition {
         GameMenu.freezeBar.setProgress(GameMenu.freezeBar.getProgress() + 0.25);
     }
 
+
     private void checkVictory() {
         if (Settings.leftBalls == 0 ){
             pane.setStyle("-fx-background-color: green");
@@ -105,5 +108,14 @@ public class ThrowingAnimation extends Transition {
         }
     }
 
+    private void makeAngularTransition() {
+        circleGroup.setLayoutX(circleGroup.getLayoutX() + Math.sin(newAngle) * 1);
+        circleGroup.setLayoutY(circleGroup.getLayoutY() - Math.cos(newAngle) * 6);
+        if (circleGroup.getLayoutY() < 0 || circleGroup.getLayoutY() > 600
+        || circleGroup.getLayoutX() < 0 || circleGroup.getLayoutX() > 500) {
+            GameMenu.gameOver = true;
+
+        }
+    }
 
 }
