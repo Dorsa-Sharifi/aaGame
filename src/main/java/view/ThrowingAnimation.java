@@ -65,6 +65,8 @@ public class ThrowingAnimation extends Transition {
         }
     }
 
+
+
     private void checkCollision() {
         for (Node circlesAndLine : centralCircle.getCirclesAndLines()) {
             if (circlesAndLine instanceof Circle) {

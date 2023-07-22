@@ -33,6 +33,7 @@ public class GameMenu extends Application {
     public static boolean gameOver = false;
     public static boolean victory = false;
     public static boolean tab = false;
+    public static boolean changeRotateDirection = false;
     public static ProgressBar progressBar;
     public static ProgressBar freezeBar;
     public static Text scoreText;
