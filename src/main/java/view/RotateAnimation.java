@@ -3,6 +3,8 @@ package view;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import model.CentralCircle;
@@ -13,12 +15,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class RotateAnimation extends Transition {
-    private CentralCircle centralCircle;
+    private static CentralCircle centralCircle;
     private CentralCircle invisibleCircle;
     private int freezeOptionIsFinished = 4;
     private int rotateCounter = 4;
     private boolean changeToCounterClockWise = false;
     private boolean changeToClockWise = false;
+    private boolean decreased = false;
+    private boolean increased = true;
+    public static boolean phase2 = false;
 
     public RotateAnimation(CentralCircle centralCircle, CentralCircle invisibleCircle) {
         this.centralCircle = centralCircle;
@@ -86,7 +91,7 @@ public class RotateAnimation extends Transition {
             } else if (!changeToCounterClockWise && changeToClockWise) {
                 rotate.setAngle(2.5);
             }
-
+            changeTheRadiusOfBalls();
         } else if (phase > 0.25 && phase <= 0.5) { //phase 3
             System.out.println("phase3");
 
@@ -108,7 +113,7 @@ public class RotateAnimation extends Transition {
                     });
                 }
                 if (rotateCounter == 1) {
-                    rotateCounter = 0 ;
+                    rotateCounter = 0;
                     changeToCounterClockWise = true;
                     changeToClockWise = true;
                     timer.cancel();
@@ -137,5 +142,61 @@ public class RotateAnimation extends Transition {
                 }
             }
         }, 0, 1000);
+    }
+
+    private void changeTheRadiusOfBalls() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            public void run() {
+                if (increased && !decreased) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            changeTheRadius(true);
+                            increased = false;
+                            decreased = true;
+                        }
+                    });
+                }
+                else if (!increased && decreased) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            changeTheRadius(false);
+                            increased = true;
+                            decreased = false;
+                        }
+                    });
+                }
+                if (GameMenu.gameOver) {
+                    timer.cancel();
+                }
+            }
+        }, 0, 1000);
+    }
+
+    private void changeTheRadius(boolean type ) {
+        for (Node circlesAndLine : centralCircle.circlesAndLines) {
+            if (circlesAndLine instanceof Circle) {
+                if (type) {
+                    ((Circle) circlesAndLine).setRadius(25);
+                } else ((Circle) circlesAndLine).setRadius(20);
+            }
+        }
+
+    }
+    public static void checkCollision() {
+        for (int i = 0 ; i < centralCircle.circlesAndLines.size() ; i++) {
+            for (int j = i + 1 ; j < centralCircle.circlesAndLines.size() ; j++) {
+                Node first = centralCircle.circlesAndLines.get(i);
+                Node second = centralCircle.circlesAndLines.get(j);
+                if (first instanceof Circle && second instanceof Circle) {
+                    if (first.getBoundsInParent().intersects(second.getBoundsInParent())){
+                        GameMenu.gameOver = true;
+
+                    }
+                }
+            }
+        }
     }
 }

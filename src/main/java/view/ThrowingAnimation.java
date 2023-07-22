@@ -40,6 +40,7 @@ public class ThrowingAnimation extends Transition {
         circleGroup.setLayoutY(circleGroup.getLayoutY() - 5);
         if (circleGroup.getBoundsInParent().intersects(invisibleCircle.getBoundsInParent())){
             checkCollision();
+            if (RotateAnimation.phase2) RotateAnimation.checkCollision();
             if (!GameMenu.gameOver) {
                 pane.getChildren().remove(circleGroup);
                 Circle newCircle = new Circle();
