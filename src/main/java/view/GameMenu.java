@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import model.CentralCircle;
 import model.Settings;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Timer;
@@ -145,6 +146,13 @@ public class GameMenu extends Application {
                             if (freezeBar.getProgress() == 1) {
                                 tab = true;
                             }
+                        } else if (keyEvent.getCode().getName().equals("Right") && RotateAnimation.phase4) {
+                            System.out.println("hi");
+                            MoveAnimation moveAnimation = new MoveAnimation(circleGroup,pane,"right");
+                            moveAnimation.play();
+                        }  else if (keyEvent.getCode().getName().equals("Left") && RotateAnimation.phase4) {
+                            MoveAnimation moveAnimation = new MoveAnimation(circleGroup,pane,"left");
+                            moveAnimation.play();
                         }
                     }
                 });
