@@ -57,7 +57,11 @@ public class MainMenu extends Application {
         newGame.setLayoutX(125);
         newGame.setLayoutY(50);
         newGame.setOnMouseClicked(mouseEvent -> {
-            //TODO: start new Game
+            try {
+                new GameMenu().start(stage);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         });
         pane.getChildren().add(newGame);
     }

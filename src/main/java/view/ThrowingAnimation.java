@@ -50,6 +50,7 @@ public class ThrowingAnimation extends Transition {
                         invisibleCircle.getCenterY() + 140);
                 Line newLine = new Line();
                 setCoordinatesOfLine(newLine, newCircle.getCenterX(), newCircle.getCenterY(), centralCircle.getCenterX(), centralCircle.getCenterY());
+                detectColorOfBalls(newCircle , newLine);
                 pane.getChildren().add(newCircle);
                 pane.getChildren().add(newLine);
                 centralCircle.getCirclesAndLines().add(newCircle);
@@ -91,7 +92,7 @@ public class ThrowingAnimation extends Transition {
         circle.setRadius(20);
         circle.setCenterX(centerX);
         circle.setCenterY(centerY);
-        detectColorOfBalls(circle);
+
     }
 
     private void setTheNewValueOfProgressBar() {
@@ -126,15 +127,22 @@ public class ThrowingAnimation extends Transition {
         }
     }
 
-    private void detectColorOfBalls(Circle newCircle) {
-        if (RotateAnimation.phase1) newCircle.setFill(Color.BLUE);
-        else if (RotateAnimation.phase2) {
-             newCircle.setFill(Color.RED);
-        } else if (RotateAnimation.phase3) {
-            newCircle.setFill(Color.YELLOW);
-        } else if (RotateAnimation.phase4) {
-            newCircle.setFill(Color.DARKOLIVEGREEN);
-        }
+    private void detectColorOfBalls(Circle newCircle , Line newLine) {
+            if (RotateAnimation.phase1) {
+                newCircle.setFill(Color.BLUE);
+                newLine.setStyle("-fx-stroke: BLUE");
+            }
+            else if (RotateAnimation.phase2) {
+                newCircle.setFill(Color.RED);
+                newLine.setStyle("-fx-stroke: RED");
+            } else if (RotateAnimation.phase3) {
+                newCircle.setFill(Color.YELLOW);
+                newLine.setStyle("-fx-stroke: YELLOW");
+            } else if (RotateAnimation.phase4) {
+                newCircle.setFill(Color.DARKOLIVEGREEN);
+                newLine.setStyle("-fx-stroke: DARKOLIVEGREEN");
+            }
+
     }
 
 }
