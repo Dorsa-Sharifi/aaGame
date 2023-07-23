@@ -26,10 +26,12 @@ public class RotateAnimation extends Transition {
     private boolean changeToClockWise = false;
     private boolean decreased = false;
     private boolean increased = true;
+    public static boolean phase1 = false;
     public static boolean phase2 = false;
     public static boolean phase3 = false;
     public static boolean phase4 = false;
     private boolean isVisible = true;
+    private boolean changeColor = false;
     private int newAngleCounter = 5;
 
     private Timer makeBallsLargerOrNormal;
@@ -42,7 +44,7 @@ public class RotateAnimation extends Transition {
         this.invisibleCircle = invisibleCircle;
         this.setCycleCount(-1);
         this.setCycleDuration(Duration.millis(1000));
-
+        phase1 = true;
     }
 
     @Override
@@ -92,6 +94,7 @@ public class RotateAnimation extends Transition {
     private void checkPhases(Rotate rotate) {
         double phase = (double) Settings.leftBalls / Settings.ballNumbers;
         if (phase > 0.5 && phase <= 0.75) { //phase 2
+            phase1 = false;
             phase2 = true;
             if (!changeToCounterClockWise && !changeToClockWise) { //set timer to changeToCounterClockwise
                 changeToCounterClockWise = true;

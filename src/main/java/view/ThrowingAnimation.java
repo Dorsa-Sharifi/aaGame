@@ -14,6 +14,7 @@ import javafx.util.Duration;
 import model.CentralCircle;
 import model.Settings;
 
+import java.util.PrimitiveIterator;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -90,6 +91,7 @@ public class ThrowingAnimation extends Transition {
         circle.setRadius(20);
         circle.setCenterX(centerX);
         circle.setCenterY(centerY);
+        detectColorOfBalls(circle);
     }
 
     private void setTheNewValueOfProgressBar() {
@@ -113,6 +115,25 @@ public class ThrowingAnimation extends Transition {
         if (circleGroup.getLayoutY() < 0 || circleGroup.getLayoutY() > 600
                 || circleGroup.getLayoutX() < 0 || circleGroup.getLayoutX() > 500) {
             GameMenu.gameOver = true;
+        }
+        if (RotateAnimation.phase1) ((Circle) circleGroup.getChildren().get(0)).setFill(Color.BLUE);
+        else if (RotateAnimation.phase2) {
+            ((Circle) circleGroup.getChildren().get(0)).setFill(Color.RED);
+        } else if (RotateAnimation.phase3) {
+            ((Circle) circleGroup.getChildren().get(0)).setFill(Color.YELLOW);
+        } else if (RotateAnimation.phase4) {
+            ((Circle) circleGroup.getChildren().get(0)).setFill(Color.DARKOLIVEGREEN);
+        }
+    }
+
+    private void detectColorOfBalls(Circle newCircle) {
+        if (RotateAnimation.phase1) newCircle.setFill(Color.BLUE);
+        else if (RotateAnimation.phase2) {
+             newCircle.setFill(Color.RED);
+        } else if (RotateAnimation.phase3) {
+            newCircle.setFill(Color.YELLOW);
+        } else if (RotateAnimation.phase4) {
+            newCircle.setFill(Color.DARKOLIVEGREEN);
         }
     }
 
