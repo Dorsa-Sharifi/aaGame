@@ -3,16 +3,12 @@ package view;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import model.CentralCircle;
 import model.Settings;
 
-import javax.print.attribute.standard.MediaSize;
-import javax.swing.*;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,7 +27,6 @@ public class RotateAnimation extends Transition {
     public static boolean phase3 = false;
     public static boolean phase4 = false;
     private boolean isVisible = true;
-    private boolean changeColor = false;
     private int newAngleCounter = 5;
 
     private Timer makeBallsLargerOrNormal;
@@ -40,7 +35,7 @@ public class RotateAnimation extends Transition {
     private Timer counterClockWise;
 
     public RotateAnimation(CentralCircle centralCircle, CentralCircle invisibleCircle) {
-        this.centralCircle = centralCircle;
+        RotateAnimation.centralCircle = centralCircle;
         this.invisibleCircle = invisibleCircle;
         this.setCycleCount(-1);
         this.setCycleDuration(Duration.millis(1000));
@@ -74,13 +69,7 @@ public class RotateAnimation extends Transition {
         timer.schedule(new TimerTask() {
             public void run() {
                 if (freezeOptionIsFinished != 0) {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            freezeOptionIsFinished--;
-
-                        }
-                    });
+                    Platform.runLater(() -> freezeOptionIsFinished--);
                 } else {
                     GameMenu.tab = false;
                     freezeOptionIsFinished = 4;
@@ -128,12 +117,7 @@ public class RotateAnimation extends Transition {
         timer.schedule(new TimerTask() {
             public void run() {
                 if (rotateCounter != 1) {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            rotateCounter--;
-                        }
-                    });
+                    Platform.runLater(() -> rotateCounter--);
                 }
                 if (rotateCounter == 1) {
                     rotateCounter = 0;
@@ -151,12 +135,7 @@ public class RotateAnimation extends Transition {
         timer.schedule(new TimerTask() {
             public void run() {
                 if (rotateCounter != 4) {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            rotateCounter++;
-                        }
-                    });
+                    Platform.runLater(() -> rotateCounter++);
                 }
                 if (rotateCounter == 3) {
                     rotateCounter = 4;
@@ -175,22 +154,16 @@ public class RotateAnimation extends Transition {
             public void run() {
                 if (phase2) {
                     if (increased && !decreased) {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                changeTheRadius(true);
-                                increased = false;
-                                decreased = true;
-                            }
+                        Platform.runLater(() -> {
+                            changeTheRadius(true);
+                            increased = false;
+                            decreased = true;
                         });
                     } else if (!increased && decreased) {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                changeTheRadius(false);
-                                increased = true;
-                                decreased = false;
-                            }
+                        Platform.runLater(() -> {
+                            changeTheRadius(false);
+                            increased = true;
+                            decreased = false;
                         });
                     }
                     if (GameMenu.gameOver) {
@@ -233,20 +206,14 @@ public class RotateAnimation extends Transition {
             public void run() {
                 if (phase3) {
                     if (isVisible) {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                setNewVisibilityToBalls(true);
-                                isVisible = false;
-                            }
+                        Platform.runLater(() -> {
+                            setNewVisibilityToBalls(true);
+                            isVisible = false;
                         });
                     } else {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                setNewVisibilityToBalls(false);
-                                isVisible = true;
-                            }
+                        Platform.runLater(() -> {
+                            setNewVisibilityToBalls(false);
+                            isVisible = true;
                         });
                     }
                 }
@@ -268,20 +235,12 @@ public class RotateAnimation extends Transition {
             public void run() {
                 if (phase4) {
                     if (newAngleCounter != 0) {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                newAngleCounter--;
-                            }
-                        });
+                        Platform.runLater(() -> newAngleCounter--);
                     }
                     if (newAngleCounter == 0){
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                makeTheTransitionAngular();
-                                newAngleCounter = 5;
-                            }
+                        Platform.runLater(() -> {
+                            makeTheTransitionAngular();
+                            newAngleCounter = 5;
                         });
                     }
                 }
@@ -292,12 +251,11 @@ public class RotateAnimation extends Transition {
 
     private void makeTheTransitionAngular() {
         if (Settings.levelDifficulty == 1.0) {
-            ThrowingAnimation.newAngle = Math.floor(Math.random() * (7 - (- 7 ) + 1) + -7);
+            ThrowingAnimation.newAngle = Math.floor(Math.random() * (7 - (-7) + 1) - 7);
         } else if (Settings.levelDifficulty == 2.0) {
-            System.out.println("HI");
-            ThrowingAnimation.newAngle = Math.floor(Math.random() * (12 - (- 12 ) + 1) + -12);
+            ThrowingAnimation.newAngle = Math.floor(Math.random() * (12 - (-12) + 1) - 12);
         } else if (Settings.levelDifficulty == 3.0) {
-            ThrowingAnimation.newAngle = Math.floor(Math.random() * (15 - (- 15 ) + 1) + -15);
+            ThrowingAnimation.newAngle = Math.floor(Math.random() * (15 - (-15) + 1) - 15);
         }
         GameMenu.newAngle = ThrowingAnimation.newAngle;
     }
