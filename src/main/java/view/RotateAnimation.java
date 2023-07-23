@@ -114,8 +114,8 @@ public class RotateAnimation extends Transition {
             if (phase3) setNewVisibilityToBalls(false);
             phase3 = false;
             phase4 = true;
-            if (!GameMenu.pane.getChildren().contains(GameMenu.throwAngle)) GameMenu.createThrowAngleText();
             setTimerForAngularChange();
+            if (!GameMenu.pane.getChildren().contains(GameMenu.throwAngle)) GameMenu.createThrowAngleText();
         }
     }
 
@@ -291,10 +291,12 @@ public class RotateAnimation extends Transition {
         if (Settings.levelDifficulty == 1.0) {
             ThrowingAnimation.newAngle = Math.floor(Math.random() * (7 - (- 7 ) + 1) + -7);
         } else if (Settings.levelDifficulty == 2.0) {
+            System.out.println("HI");
             ThrowingAnimation.newAngle = Math.floor(Math.random() * (12 - (- 12 ) + 1) + -12);
         } else if (Settings.levelDifficulty == 3.0) {
             ThrowingAnimation.newAngle = Math.floor(Math.random() * (15 - (- 15 ) + 1) + -15);
         }
+        GameMenu.newAngle = ThrowingAnimation.newAngle;
     }
 
 }

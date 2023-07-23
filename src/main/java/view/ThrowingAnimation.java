@@ -25,9 +25,9 @@ public class ThrowingAnimation extends Transition {
     private CentralCircle invisibleCircle;
     private Group circleGroup;
     private Pane pane;
-    public static double newAngle;
+    public static double newAngle = 0;
 
-    public ThrowingAnimation(CentralCircle centralCircle, CentralCircle invisibleCircle, Group circleGroup , Pane pane) {
+    public ThrowingAnimation(CentralCircle centralCircle, CentralCircle invisibleCircle, Group circleGroup, Pane pane) {
         this.centralCircle = centralCircle;
         this.invisibleCircle = invisibleCircle;
         this.circleGroup = circleGroup;
@@ -38,31 +38,30 @@ public class ThrowingAnimation extends Transition {
 
     @Override
     protected void interpolate(double v) {
-         if (!RotateAnimation.phase4) circleGroup.setLayoutY(circleGroup.getLayoutY() - 5);
-         else makeAngularTransition();
-        if (circleGroup.getBoundsInParent().intersects(invisibleCircle.getBoundsInParent())){
+        makeAngularTransition();
+        if (circleGroup.getBoundsInParent().intersects(invisibleCircle.getBoundsInParent())) {
             checkCollision();
             if (RotateAnimation.phase2) RotateAnimation.checkCollision();
             if (!GameMenu.gameOver) {
                 pane.getChildren().remove(circleGroup);
                 Circle newCircle = new Circle();
-                setCoordinatesOfCircle(newCircle,invisibleCircle.getCenterX(),
+                setCoordinatesOfCircle(newCircle, invisibleCircle.getCenterX(),
                         invisibleCircle.getCenterY() + 140);
                 Line newLine = new Line();
-                setCoordinatesOfLine(newLine , newCircle.getCenterX() , newCircle.getCenterY() , centralCircle.getCenterX(), centralCircle.getCenterY());
+                setCoordinatesOfLine(newLine, newCircle.getCenterX(), newCircle.getCenterY(), centralCircle.getCenterX(), centralCircle.getCenterY());
                 pane.getChildren().add(newCircle);
                 pane.getChildren().add(newLine);
                 centralCircle.getCirclesAndLines().add(newCircle);
                 centralCircle.getCirclesAndLines().add(newLine);
                 Settings.leftBalls--;
-                GameMenu.leftBalls.setText("Left Balls: "+Settings.leftBalls);
+                GameMenu.leftBalls.setText("Left Balls: " + Settings.leftBalls);
                 setTheNewValueOfProgressBar();
                 checkVictory();
                 GameMenu.circleGroup = GameMenu.makeTheNewBall();
                 this.stop();
             }
         }
-        if (GameMenu.gameOver){
+        if (GameMenu.gameOver) {
             pane.setStyle("-fx-background-color: red");
             invisibleCircle.setFill(Color.RED);
             GameMenu.timer.cancel();
@@ -73,7 +72,7 @@ public class ThrowingAnimation extends Transition {
     private void checkCollision() {
         for (Node circlesAndLine : centralCircle.getCirclesAndLines()) {
             if (circlesAndLine instanceof Circle) {
-                if (circleGroup.getBoundsInParent().intersects(circlesAndLine.getBoundsInParent())){
+                if (circleGroup.getBoundsInParent().intersects(circlesAndLine.getBoundsInParent())) {
                     GameMenu.gameOver = true;
                 }
             }
@@ -101,7 +100,7 @@ public class ThrowingAnimation extends Transition {
 
 
     private void checkVictory() {
-        if (Settings.leftBalls == 0 ){
+        if (Settings.leftBalls == 0) {
             pane.setStyle("-fx-background-color: green");
             invisibleCircle.setFill(Color.GREEN);
             GameMenu.timer.cancel();
@@ -109,12 +108,11 @@ public class ThrowingAnimation extends Transition {
     }
 
     private void makeAngularTransition() {
-        circleGroup.setLayoutX(circleGroup.getLayoutX() + Math.sin(newAngle) * 1);
-        circleGroup.setLayoutY(circleGroup.getLayoutY() - Math.cos(newAngle) * 6);
+        circleGroup.setLayoutX(circleGroup.getLayoutX() + Math.sin(Math.PI / 180 * newAngle) * 1);
+        circleGroup.setLayoutY(circleGroup.getLayoutY() + Math.cos(Math.PI / 180 * newAngle) * -5);
         if (circleGroup.getLayoutY() < 0 || circleGroup.getLayoutY() > 600
-        || circleGroup.getLayoutX() < 0 || circleGroup.getLayoutX() > 500) {
+                || circleGroup.getLayoutX() < 0 || circleGroup.getLayoutX() > 500) {
             GameMenu.gameOver = true;
-
         }
     }
 

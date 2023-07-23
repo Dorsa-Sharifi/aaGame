@@ -48,7 +48,7 @@ public class GameMenu extends Application {
     private int minute = 0;
     private Label timeLabel;
     public static Group circleGroup;
-    public static double newAngle;
+    public static double newAngle = 0;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -216,17 +216,20 @@ public class GameMenu extends Application {
     }
 
     public static Group makeTheNewBall(){
-        Group circleGroup = new Group();
-        Circle circle = new Circle();
-        circle.setRadius(20);
-        Text number = new Text(String.valueOf(Settings.leftBalls));
-        number.setFill(Color.WHITE);
-        circleGroup.setLayoutX(250);
-        circleGroup.setLayoutY(550);
-        circleGroup.getChildren().add(circle);
-        circleGroup.getChildren().add(number);
-        pane.getChildren().add(circleGroup);
-        return circleGroup;
+        if (Settings.leftBalls != 0) {
+            Group circleGroup = new Group();
+            Circle circle = new Circle();
+            circle.setRadius(20);
+            Text number = new Text(String.valueOf(Settings.leftBalls));
+            number.setFill(Color.WHITE);
+            circleGroup.setLayoutX(250);
+            circleGroup.setLayoutY(550);
+            circleGroup.getChildren().add(circle);
+            circleGroup.getChildren().add(number);
+            pane.getChildren().add(circleGroup);
+            return circleGroup;
+        }
+        return null;
     }
 
 
@@ -304,13 +307,6 @@ public class GameMenu extends Application {
 
     public static void createThrowAngleText() {
         throwAngle = new Text() ;
-        if (Settings.levelDifficulty == 1.0) {
-            newAngle = 0;
-        } else if (Settings.levelDifficulty == 2.0) {
-            newAngle = 2;
-        } else if (Settings.levelDifficulty == 3.0) {
-            newAngle = 3;
-        }
         throwAngle.setText("Throw Angle: " + newAngle);
         throwAngle.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 15px ;");
         throwAngle.setLayoutX(5);
