@@ -257,6 +257,7 @@ public class GameMenu extends Application {
             }
         }, 0, 1000);
 
+
     }
 
     private void createProgressBarOfScores(){
