@@ -104,7 +104,11 @@ public class MainMenu extends Application {
         scoreboardMenu.setLayoutX(305);
         scoreboardMenu.setLayoutY(258);
         scoreboardMenu.setOnMouseClicked(mouseEvent -> {
-            //ScoreBoardMenu
+            try {
+                new ScoreboardMenu().start(this.stage);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         });
         pane.getChildren().add(scoreboardMenu);
     }

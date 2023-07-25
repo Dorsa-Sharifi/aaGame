@@ -10,13 +10,14 @@ public class ScoreBoard {
     private int seconds;
     private int rate;
     private ImageView profile;
-
-    public ScoreBoard(String username, int minute , int seconds, int rate, ImageView profile) {
+    private int difficulty;
+    public ScoreBoard(String username, int minute , int seconds, int rate, ImageView profile,int difficulty) {
         this.username = username;
         this.minute = minute;
         this.seconds = seconds;
         this.rate = rate;
         this.profile = profile;
+        this.difficulty = difficulty;
     }
 
     public String getUsername() {
@@ -37,5 +38,9 @@ public class ScoreBoard {
 
     public ImageView getProfile() {
         return profile;
+    }
+
+    public int getDifficulty() {
+        return difficulty;
     }
 }
