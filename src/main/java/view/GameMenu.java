@@ -6,19 +6,21 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import model.CentralCircle;
-import model.Settings;
+import model.*;
 
 import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.util.Objects;
@@ -28,7 +30,7 @@ import java.util.TimerTask;
 
 public class GameMenu extends Application {
 
-    public Stage stage;
+    public static Stage stage;
     public static Pane pane;
     public Scene scene;
     public static boolean gameOver = false;
@@ -44,14 +46,21 @@ public class GameMenu extends Application {
     public static Text throwAngle;
     public static int score = 0;
     public static Timer timer;
-    private int seconds = 0;
-    private int minute = 0;
+    public static int seconds = 0;
+    public static int minute = 0;
     private Label timeLabel;
     public static Group circleGroup;
     public static double newAngle = 0;
 
+
     @Override
     public void start(Stage stage) throws Exception {
+        ImageView imageView = new ImageView(new Image
+                (Objects.requireNonNull
+                        (RegisterMenu.class.getResource("/images/man.png")).toExternalForm()));
+        User user = new User("doreece","123",imageView);
+        GlobalData.setCurrentUser(user);
+        GlobalData.getAllUsers().add(user);
         this.stage = stage;
         Pane pane = new Pane();
         this.pane = pane;
@@ -313,5 +322,95 @@ public class GameMenu extends Application {
         throwAngle.setLayoutX(5);
         throwAngle.setLayoutY(115);
         pane.getChildren().add(throwAngle);
+    }
+
+    public static void makeTheEndingMenu() {
+        GlobalData.getCurrentUser().scoreRows.add(new ScoreBoard(GlobalData.getCurrentUser().getUsername(),
+                minute,seconds , score , GlobalData.currentUser.getProfile(), Settings.levelDifficulty));
+        VBox vBox = new VBox();
+        vBox.setLayoutX(130);
+        vBox.setLayoutY(150);
+        vBox.setPrefSize(250 , 200);
+        vBox.setStyle("-fx-background-color: #8c92ac; -fx-background-radius: 10px");
+        Text gameResult = new Text();
+        Text scoreText = new Text();
+        Text timeText = new Text();
+        Button backToMainMenu = new Button();
+        Button scoreBoardMenu = new Button();
+        gameResult.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20px ;");
+        scoreText.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 15px ;");
+        timeText.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 15px ;");
+        gameResult.setFill(Color.WHITE);
+        scoreText.setFill(Color.WHITE);
+        timeText.setFill(Color.WHITE);
+        if (Settings.isEnglish){
+            backToMainMenu.setText("Main Menu");
+            scoreBoardMenu.setText("Scoreboard");
+            if (!gameOver){
+                gameResult.setText("You won!");
+                backToMainMenu.setStyle("-fx-background-color: #115b24; -fx-font-family: 'Times New Roman'");
+                scoreBoardMenu.setStyle("-fx-background-color: #115b24; -fx-font-family: 'Times New Roman'");
+            }
+            else{
+                gameResult.setText("You lost!");
+                backToMainMenu.setStyle("-fx-background-color: #9a0d0d; -fx-font-family: 'Times New Roman'");
+                scoreBoardMenu.setStyle("-fx-background-color: #9a0d0d; -fx-font-family: 'Times New Roman'");
+            }
+            scoreText.setText("Score: "+score);
+            timeText.setText("Time: "+ minute + ":" + seconds);
+
+        } else {
+            backToMainMenu.setText("منوی اصلی");
+            scoreBoardMenu.setText("جدول امتیاز");
+            if (!gameOver){
+                gameResult.setText("شما برنده شدید!");
+                backToMainMenu.setStyle("-fx-background-color: #115b24; -fx-font-family: 'Times New Roman'");
+                scoreBoardMenu.setStyle("-fx-background-color: #115b24; -fx-font-family: 'Times New Roman'");
+            }
+            else {
+                gameResult.setText("آخی باختی!");
+                backToMainMenu.setStyle("-fx-background-color: #9a0d0d; -fx-font-family: 'Times New Roman'");
+                scoreBoardMenu.setStyle("-fx-background-color: #9a0d0d; -fx-font-family: 'Times New Roman'");
+            }
+            scoreText.setText( score + " :امتیاز ");
+            timeText.setText( minute + ":" + seconds + " :زمان");
+            gameResult.setTranslateX(-10);
+
+        }
+
+        backToMainMenu.setPrefSize(80,40);
+        backToMainMenu.setTranslateX(30);
+        backToMainMenu.setTranslateY(80);
+        backToMainMenu.setOnMouseClicked(mouseEvent -> {
+            try {
+                new MainMenu().start(stage);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        scoreBoardMenu.setPrefSize(80,40);
+        scoreBoardMenu.setTranslateX(130);
+        scoreBoardMenu.setTranslateY(40);
+        scoreBoardMenu.setOnMouseClicked(mouseEvent -> {
+            try {
+                new ScoreboardMenu().start(stage);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        gameResult.setTranslateX(80);
+        gameResult.setTranslateY(20);
+        scoreText.setTranslateX(30);
+        scoreText.setTranslateY(50);
+        timeText.setTranslateX(130);
+        timeText.setTranslateY(31.5);
+        vBox.getChildren().add(gameResult);
+        vBox.getChildren().add(scoreText);
+        vBox.getChildren().add(timeText);
+        vBox.getChildren().add(backToMainMenu);
+        vBox.getChildren().add(scoreBoardMenu);
+        pane.getChildren().add(vBox);
     }
 }

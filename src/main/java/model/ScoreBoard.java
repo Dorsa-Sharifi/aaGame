@@ -2,16 +2,14 @@ package model;
 
 import javafx.scene.image.ImageView;
 
-import java.time.LocalTime;
-
 public class ScoreBoard {
     private String username;
     private int minute;
     private int seconds;
     private int rate;
     private ImageView profile;
-    private int difficulty;
-    public ScoreBoard(String username, int minute , int seconds, int rate, ImageView profile,int difficulty) {
+    private double difficulty;
+    public ScoreBoard(String username, int minute , int seconds, int rate, ImageView profile, double difficulty) {
         this.username = username;
         this.minute = minute;
         this.seconds = seconds;
@@ -40,7 +38,7 @@ public class ScoreBoard {
         return profile;
     }
 
-    public int getDifficulty() {
+    public double getDifficulty() {
         return difficulty;
     }
 }

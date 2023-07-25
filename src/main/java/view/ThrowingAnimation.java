@@ -64,9 +64,10 @@ public class ThrowingAnimation extends Transition {
             }
         }
         if (GameMenu.gameOver) {
-            pane.setStyle("-fx-background-color: red");
-            invisibleCircle.setFill(Color.RED);
+            pane.setStyle("-fx-background-color: #871818");
+            invisibleCircle.setFill(Color.rgb(135,24,24));
             GameMenu.timer.cancel();
+            GameMenu.makeTheEndingMenu();
             this.stop();
         }
     }
@@ -103,9 +104,10 @@ public class ThrowingAnimation extends Transition {
 
 
     private void checkVictory() {
-        if (Settings.leftBalls == 0) {
+        if (Settings.leftBalls == 0 && !GameMenu.gameOver) {
             pane.setStyle("-fx-background-color: green");
             invisibleCircle.setFill(Color.GREEN);
+            GameMenu.makeTheEndingMenu();
             GameMenu.timer.cancel();
         }
     }
